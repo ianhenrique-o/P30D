@@ -1,0 +1,721 @@
+/* ==========================================================
+   DESIGN: Minimal Black + White + Subtle Gold
+   Page: Home — Landing Page "Piloto 30 Dias"
+   Paleta: Preto, Branco, Dourado Claro (#C9A961)
+   Fontes: Montserrat (corpo), Playfair Display (títulos)
+   ========================================================== */
+
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { ArrowRight, CheckCircle, Instagram, XCircle, Zap } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+const HERO_BG = "https://private-us-east-1.manuscdn.com/sessionFile/K47cxz21qHzRlvymlC8apz/sandbox/C2vNLNJJV2io2JP0vxfQC9-img-1_1772106093000_na1fn_aGVyby1iZy1uZXc.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvSzQ3Y3h6MjFxSHpSbHZ5bWxDOGFwei9zYW5kYm94L0Mydk5MTkpKVjJpbzJKUDB2eGZRQzktaW1nLTFfMTc3MjEwNjA5MzAwMF9uYTFmbl9hR1Z5YnkxaVp5MXVaWGMuanBnP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=Feptuc-nKriGIXx4rGT8TMWD6haHGkPs0udHtVf7VJikwu8QOMKcQag0pXFv8kPZFgxQyCn6bHdYYo-UFe3x3fji8690svQXjE5nv6k14YO~UpL7MXW~tP0EibcbUe1nSgyOTxmEBcD-7TD2UVn-cTLIbfiLTceUaZ~RZ9wqyjMjkKi96E5dThdzbZlU5TI-b-Yo7am-p5c0C4cABbuMvyZx9PS-eFTPhyO~AOzNKaKs7UGk7p3GrIUgIzpu-DRcHdJ-GO4UNFbXtkAn1g7RkLXGjq3jWN9p9~bUu1wStnnWsnC6WdlZKh8czgOknY7cvvDNqcPlPN2K5d4jWHS~6w__";
+const SECTION_BG = "https://private-us-east-1.manuscdn.com/sessionFile/K47cxz21qHzRlvymlC8apz/sandbox/C2vNLNJJV2io2JP0vxfQC9-img-2_1772106095000_na1fn_c2VjdGlvbi1iZy1uZXc.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvSzQ3Y3h6MjFxSHpSbHZ5bWxDOGFwei9zYW5kYm94L0Mydk5MTkpKVjJpbzJKUDB2eGZRQzktaW1nLTJfMTc3MjEwNjA5NTAwMF9uYTFmbl9jMlZqZEdsdmJpMWlaeTF1WlhjLmpwZz94LW9zcy1wcm9jZXNzPWltYWdlL3Jlc2l6ZSx3XzE5MjAsaF8xOTIwL2Zvcm1hdCx3ZWJwL3F1YWxpdHkscV84MCIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc5ODc2MTYwMH19fV19&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=avOYHdqYpgTfu9Qe4VsGOp5FJWtjvmq5Ri-7yOOIfotY4FZx0-zuWYMaw7C9K8E6XgCb-7uDuaCBf0UD-JC5RGdicDPVGgDvgPYfrKQVa5veZLiyL~hae-d~Agi3Qr89JI8NwxWV1yTb5hkQDwGNrPrQn0EMb4z9M92h~bFlZPWWseAvq2~Dae4ECVpuXeaJIPsymBzB4oIaqxUU-v4VIvXzUuxQJNzRn1klkVOULbZS7gtpUsINlG1MYCoNhtlflWNBqKuPj2Ag982-DmoFK5YbnMYNxxNE001gdQBG6TsSv~8c05fbT5YOPzqjtjvAyrHCeBnlto-CFZfxLg6oJQ__";
+const CTA_BG = "https://private-us-east-1.manuscdn.com/sessionFile/K47cxz21qHzRlvymlC8apz/sandbox/C2vNLNJJV2io2JP0vxfQC9-img-3_1772106093000_na1fn_Y3RhLWJnLW5ldw.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvSzQ3Y3h6MjFxSHpSbHZ5bWxDOGFwei9zYW5kYm94L0Mydk5MTkpKVjJpbzJKUDB2eGZRQzktaW1nLTNfMTc3MjEwNjA5MzAwMF9uYTFmbl9ZM1JoTFdKbkxXNWxkdy5qcGc~eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsd18xOTIwLGhfMTkyMC9mb3JtYXQsd2VicC9xdWFsaXR5LHFfODAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=hwiUh4iy4Vnzczp4lyT-PtTxQYWhE7-DWHOL13WIbGihHtCy707gi5WTAT0mnvWA4ktf8QaRisSXLtx7WU7uiQI9~HPMSMF-OuhvhyiJK7JyN7t1WZoMGgFOCBIbLpjLntLn0fInnDuUwFo56NHNbM~CekTaMtlG5SoGOVP5U3DgF9pJNOwQjJIydT9O3b5i7dQGgDvrS8nbL3VxcsqKzTjsbCK8dLT~gyM2QAJwI3Frsn4jtQ7HLybKHOTZ~Hc~ujcSRnYbF1zrpTkwah~j8lQvPUmPZ0Apr88Vv5Jq4NZv5q-kETNRkBow~u3RC-vVQ--8Jz1H-Icj8opgKM4Bxg__";
+
+const INSTAGRAM_URL = "https://www.instagram.com/direct/t/115170046537772/";
+
+// Animated number counter
+function Counter({ target, suffix = "" }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const duration = 1800;
+          const start = performance.now();
+          const animate = (now: number) => {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setCount(Math.floor(eased * target));
+            if (progress < 1) requestAnimationFrame(animate);
+            else setCount(target);
+          };
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+}
+
+export default function Home() {
+  useScrollReveal();
+
+  const handleCTA = () => {
+    window.open(INSTAGRAM_URL, "_blank");
+  };
+
+  return (
+    <div style={{ background: "#ffffff", color: "#000000" }}>
+      {/* ====== HERO SECTION ====== */}
+      <section
+        className="relative min-h-screen flex items-center justify-center overflow-hidden"
+        style={{ minHeight: "100svh", background: "#000000" }}
+      >
+        {/* Background image */}
+        <div
+          className="absolute inset-0 z-0 opacity-20"
+          style={{
+            backgroundImage: `url(${HERO_BG})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
+
+        {/* Content — CENTERED */}
+        <div className="container relative z-10 text-center" style={{ paddingTop: "6rem", paddingBottom: "6rem", maxWidth: "800px" }}>
+          {/* Tag */}
+          <div
+            className="animate-fade-in"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              padding: "0.5rem 1rem",
+              border: "1px solid #c9a961",
+              marginBottom: "2rem",
+              opacity: 0,
+              animation: "fade-in 0.8s ease-out 0.2s forwards",
+              color: "#c9a961",
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: "0.7rem",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              fontWeight: 600,
+            }}
+          >
+            <span style={{ width: "4px", height: "4px", borderRadius: "50%", background: "#c9a961", display: "inline-block" }} />
+            Vaga Piloto — 30 Dias
+          </div>
+
+          {/* Main headline */}
+          <h1
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(2.5rem, 7vw, 5rem)",
+              fontWeight: 800,
+              lineHeight: 1.1,
+              color: "#ffffff",
+              marginBottom: "1rem",
+              opacity: 0,
+              animation: "slide-up 0.8s ease-out 0.4s forwards",
+            }}
+          >
+            Seu Instagram não está ruim.
+          </h1>
+
+          {/* Subtitle */}
+          <h2
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(2rem, 5vw, 3.5rem)",
+              fontWeight: 700,
+              lineHeight: 1.15,
+              color: "#c9a961",
+              marginBottom: "2rem",
+              opacity: 0,
+              animation: "slide-up 0.8s ease-out 0.55s forwards",
+            }}
+          >
+            Ele só está operando sem sistema.
+          </h2>
+
+          {/* Sub-copy */}
+          <p
+            style={{
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: "clamp(0.95rem, 2vw, 1.1rem)",
+              fontWeight: 300,
+              color: "#cccccc",
+              lineHeight: 1.7,
+              marginBottom: "3rem",
+              opacity: 0,
+              animation: "slide-up 0.8s ease-out 0.7s forwards",
+            }}
+          >
+            E quando não existe sistema, o custo aparece todo dia. Isso aqui não é sobre postar melhor. É sobre transformar seu Instagram em um mecanismo previsível de pedidos certos no direct.
+          </p>
+
+          {/* CTA buttons */}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "1rem",
+              justifyContent: "center",
+              alignItems: "center",
+              opacity: 0,
+              animation: "slide-up 0.8s ease-out 1s forwards",
+            }}
+          >
+            <button className="btn-gold" onClick={handleCTA}>
+              <span>Chamar no Direct</span>
+              <ArrowRight size={18} />
+            </button>
+          </div>
+        </div>
+
+
+      </section>
+
+      {/* ====== PROBLEM SECTION ====== */}
+      <section style={{ padding: "7rem 0", background: "#ffffff" }}>
+        <div className="container">
+          <div style={{ display: "flex", flexDirection: "column", gap: "5rem", alignItems: "center", textAlign: "center" }}>
+            {/* Intro */}
+            <div className="reveal" style={{ maxWidth: "700px" }}>
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#c9a961", marginBottom: "1.5rem", fontWeight: 600 }}>
+                O diagnóstico
+              </p>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 800, lineHeight: 1.15, marginBottom: "1.5rem" }}>
+                Se você já é competente no que faz, o problema não é conteúdo.
+              </h2>
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "1rem", color: "#333333", lineHeight: 1.8, fontWeight: 300 }}>
+                É falta de <strong style={{ color: "#000000", fontWeight: 600 }}>engenharia de posicionamento + conversão</strong>. O gargalo quase nunca é esforço. É estrutura.
+              </p>
+            </div>
+
+            {/* Three gaps - stacked vertically */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: "600px", margin: "0 auto" }}>
+              {[
+                {
+                  num: "01",
+                  title: "Perfil que não sinaliza valor",
+                  desc: "Bio, destaques e promessa não deixam claro quem você atende.",
+                  delay: "0ms",
+                },
+                {
+                  num: "02",
+                  title: "Conteúdo sem função clara",
+                  desc: "Educa, mas não conduz. Entretem, mas não filtra.",
+                  delay: "150ms",
+                },
+                {
+                  num: "03",
+                  title: "Direct sem método",
+                  desc: "DM é conversa. Sem sistema, você vira suporte gratuito.",
+                  delay: "300ms",
+                },
+              ].map((item) => (
+                <div
+                  key={item.num}
+                  className="reveal"
+                  style={{
+                    padding: "2rem",
+                    background: "#f5f5f5",
+                    border: "1px solid #e0e0e0",
+                    transitionDelay: item.delay,
+                    position: "relative",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "'Montserrat', sans-serif",
+                      fontSize: "3rem",
+                      lineHeight: 1,
+                      color: "#e0e0e0",
+                      position: "absolute",
+                      top: "1rem",
+                      right: "1.5rem",
+                      fontWeight: 800,
+                      userSelect: "none",
+                    }}
+                  >
+                    {item.num}
+                  </div>
+                  <div style={{ width: "1.5rem", height: "1px", background: "#c9a961", marginBottom: "1rem" }} />
+                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.75rem", lineHeight: 1.3 }}>
+                    {item.title}
+                  </h3>
+                  <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.9rem", color: "#666666", lineHeight: 1.7, fontWeight: 300 }}>
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ====== DIVIDER ====== */}
+      <div style={{ height: "1px", background: "#000000" }} />
+
+      {/* ====== WHAT CHANGES SECTION ====== */}
+      <section id="o-que-muda" style={{ padding: "7rem 0", background: "#f5f5f5" }}>
+        <div className="container">
+          <div style={{ display: "flex", flexDirection: "column", gap: "3rem", alignItems: "center", textAlign: "center", maxWidth: "700px", margin: "0 auto" }}>
+            <div className="reveal">
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#c9a961", marginBottom: "1.5rem", fontWeight: 600 }}>
+                O que muda na prática
+              </p>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 3.5vw, 2.8rem)", fontWeight: 800, lineHeight: 1.15, marginBottom: "2rem", maxWidth: "600px", margin: "0 auto 2rem" }}>
+                Eliminação de ruído. Quando o ruído sai, o bom cliente aparece.
+              </h2>
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "1rem", color: "#333333", lineHeight: 1.8, fontWeight: 300, marginBottom: "2.5rem", maxWidth: "600px", margin: "0 auto 2.5rem" }}>
+                Isso não é promessa de faturamento. É eliminação de ruído. Mais controle sobre quem avança e quem para.
+              </p>
+              <button className="btn-gold" onClick={handleCTA}>
+                <span>Quero instalar o sistema</span>
+                <ArrowRight size={16} />
+              </button>
+            </div>
+
+            <div className="reveal" style={{ display: "flex", flexDirection: "column", gap: "0.75rem", maxWidth: "500px", margin: "0 auto" }}>
+              {[
+                "Mais DMs qualificadas por semana",
+                "Menos conversa inútil",
+                "Mais controle sobre quem avança e quem para",
+                "Mais previsibilidade entre post → DM → agendamento",
+                "Sem depender de trends",
+                "Sem viver apagando incêndio em DM",
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: "0.75rem",
+                    padding: "0.75rem 1rem",
+                    background: "#ffffff",
+                    border: "1px solid #e0e0e0",
+                    transitionDelay: `${i * 80}ms`,
+                  }}
+                >
+                  <CheckCircle size={16} style={{ color: "#c9a961", flexShrink: 0, marginTop: "2px" }} />
+                  <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.9rem", color: "#333333", fontWeight: 400, lineHeight: 1.5 }}>
+                    {item}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ====== METRICS SECTION ====== */}
+      <section
+        style={{
+          padding: "6rem 0",
+          backgroundImage: `url(${SECTION_BG})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          position: "relative",
+          background: "#f5f5f5",
+        }}
+      >
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "2rem", alignItems: "center", maxWidth: "500px", margin: "0 auto", textAlign: "center" }}>
+            {[
+              { value: 30, suffix: " dias", label: "De implementação assistida" },
+              { value: 12, suffix: "", label: "Roteiros de Reels com intenção de venda" },
+              { value: 4, suffix: "", label: "Carrosséis estratégicos de conversão" },
+              { value: 100, suffix: "%", label: "Independência após o piloto" },
+            ].map((item, i) => (
+              <div key={i} className="reveal" style={{ transitionDelay: `${i * 120}ms`, width: "100%" }}>
+                <div
+                  style={{
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontSize: "clamp(3rem, 6vw, 4.5rem)",
+                    lineHeight: 1,
+                    marginBottom: "0.5rem",
+                    color: "#000000",
+                    fontWeight: 800,
+                  }}
+                >
+                  <Counter target={item.value} suffix={item.suffix} />
+                </div>
+                <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.85rem", color: "#666666", fontWeight: 300, lineHeight: 1.5 }}>
+                  {item.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ====== WHAT GETS INSTALLED ====== */}
+      <section style={{ padding: "7rem 0", background: "#ffffff" }}>
+        <div className="container">
+          <div className="reveal" style={{ textAlign: "center", marginBottom: "4rem" }}>
+            <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#c9a961", marginBottom: "1rem", fontWeight: 600 }}>
+              O que será instalado em 30 dias
+            </p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 4vw, 2.8rem)", fontWeight: 800, lineHeight: 1.15, maxWidth: "600px", margin: "0 auto" }}>
+              Tudo pensado para funcionar sem dependência depois.
+            </h2>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem", maxWidth: "900px", margin: "0 auto" }}>
+            {[
+              {
+                icon: "01",
+                title: "Reposicionamento Estratégico",
+                desc: "Promessa clara em 1 frase e ângulos de diferenciação que separam você da concorrência.",
+                delay: "0ms",
+              },
+              {
+                icon: "02",
+                title: "Perfil de Conversão",
+                desc: "Bio reescrita com CTA objetivo e destaques com lógica de progressão para o público certo.",
+                delay: "100ms",
+              },
+              {
+                icon: "03",
+                title: "Sistema de Conteúdo",
+                desc: "12 roteiros de Reels + 4 carrosséis com intenção de venda — não apenas engajamento.",
+                delay: "200ms",
+              },
+              {
+                icon: "04",
+                title: "Playbook de Direct",
+                desc: "Perguntas de triagem, respostas por cenário e regras de follow-up. DM como sistema.",
+                delay: "300ms",
+              },
+            ].map((item) => (
+              <div
+                key={item.icon}
+                className="reveal"
+                style={{
+                  padding: "2rem",
+                  background: "#f5f5f5",
+                  border: "1px solid #e0e0e0",
+                  transitionDelay: item.delay,
+                  position: "relative",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = "#c9a961";
+                  (e.currentTarget as HTMLElement).style.background = "#fffbf5";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = "#e0e0e0";
+                  (e.currentTarget as HTMLElement).style.background = "#f5f5f5";
+                }}
+              >
+                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.7rem", letterSpacing: "0.2em", color: "#c9a961", marginBottom: "0.75rem", fontWeight: 600 }}>
+                  {item.icon}
+                </div>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.75rem", lineHeight: 1.3 }}>
+                  {item.title}
+                </h3>
+                <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.9rem", color: "#666666", lineHeight: 1.7, fontWeight: 300 }}>
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ====== DIVIDER ====== */}
+      <div style={{ height: "1px", background: "#000000" }} />
+
+      {/* ====== FOR WHOM SECTION ====== */}
+      <section style={{ padding: "7rem 0", background: "#f5f5f5" }}>
+        <div className="container">
+          <div style={{ display: "flex", flexDirection: "column", gap: "3rem", alignItems: "center", textAlign: "center", maxWidth: "700px", margin: "0 auto" }}>
+            {/* For whom it works */}
+            <div className="reveal">
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "2rem" }}>
+                <div style={{ width: "1.5rem", height: "1px", background: "#c9a961" }} />
+                <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#c9a961", fontWeight: 600 }}>
+                  Para quem funciona
+                </p>
+                <div style={{ width: "1.5rem", height: "1px", background: "#c9a961" }} />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1rem", alignItems: "center" }}>
+                {[
+                  "Consegue investir 3 mil reais para ter uma marca muito mais atrativa para os clientes.",
+                  "Tem estrutura para atender mais demanda",
+                  "Consegue executar por 30 dias",
+                  "Quer parar de 'postar e torcer'",
+                ].map((item, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.875rem", justifyContent: "center" }}>
+                    <CheckCircle size={16} style={{ color: "#c9a961", flexShrink: 0 }} />
+                    <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.95rem", color: "#000000", lineHeight: 1.5 }}>
+                      {item}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Not for whom */}
+            <div className="reveal">
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", marginBottom: "2rem" }}>
+                <div style={{ width: "1.5rem", height: "1px", background: "#999999" }} />
+                <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#999999", fontWeight: 600 }}>
+                  Não faz sentido se
+                </p>
+                <div style={{ width: "1.5rem", height: "1px", background: "#999999" }} />
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1rem", alignItems: "center" }}>
+                {[
+                  "Quer terceirizar tudo sem executar",
+                  "Espera urgência fora de regra",
+                  "Gosta de acumular ideias e não aplicar",
+                ].map((item, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.875rem", justifyContent: "center" }}>
+                    <XCircle size={16} style={{ color: "#999999", flexShrink: 0 }} />
+                    <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.95rem", color: "#666666", lineHeight: 1.5 }}>
+                      {item}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ====== RULES & INVESTMENT ====== */}
+      <section style={{ padding: "7rem 0", background: "#ffffff" }}>
+        <div className="container">
+          <div style={{ display: "flex", flexDirection: "column", gap: "3rem", alignItems: "center", textAlign: "center", maxWidth: "700px", margin: "0 auto" }}>
+            {/* Rules */}
+            <div className="reveal">
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#c9a961", marginBottom: "1.5rem", fontWeight: 600 }}>
+                Regras de operação
+              </p>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem, 3vw, 2.4rem)", fontWeight: 800, lineHeight: 1.2, marginBottom: "1.5rem" }}>
+                Sistema precisa de ordem.
+              </h2>
+              <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.95rem", color: "#333333", lineHeight: 1.8, fontWeight: 300, marginBottom: "2rem" }}>
+                O atendimento acontece via WhatsApp, de Seg–Sex (10h–19h), com resposta em até 4h úteis. Sem caos operacional.
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", alignItems: "center" }}>
+                {[
+                  "Atendimento via WhatsApp",
+                  "Segunda a Sexta, das 10h às 19h",
+                  "Resposta em até 4h úteis",
+                  "Execução por 30 dias corridos",
+                ].map((rule, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.75rem", justifyContent: "center" }}>
+                    <Zap size={14} style={{ color: "#c9a961", flexShrink: 0 }} />
+                    <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.9rem", color: "#333333", fontWeight: 400 }}>
+                      {rule}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Investment card */}
+            <div className="reveal">
+              <div
+                style={{
+                  padding: "3rem",
+                  background: "#000000",
+                  color: "#ffffff",
+                  border: "1px solid #c9a961",
+                  position: "relative",
+                  overflow: "hidden",
+                  maxWidth: "500px",
+                  margin: "0 auto",
+                }}
+              >
+                <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#c9a961", marginBottom: "1.5rem", fontWeight: 600 }}>
+                  Investimento — Vaga Piloto
+                </p>
+                <div style={{ marginBottom: "0.5rem" }}>
+                  <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.95rem", color: "#cccccc", fontWeight: 300 }}>R$</span>
+                  <span
+                    style={{
+                      fontFamily: "'Montserrat', sans-serif",
+                      fontSize: "clamp(3.5rem, 8vw, 5.5rem)",
+                      lineHeight: 1,
+                      color: "#c9a961",
+                      letterSpacing: "-0.02em",
+                      fontWeight: 800,
+                    }}
+                  >
+                    3.000
+                  </span>
+                </div>
+                <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.9rem", color: "#cccccc", marginBottom: "0.5rem", fontWeight: 300 }}>
+                  Execução por 30 dias
+                </p>
+                <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.85rem", color: "#999999", marginBottom: "2.5rem", fontWeight: 300 }}>
+                  Pagamento à vista ou 2x (Entrada + 15 dias)
+                </p>
+                <div style={{ height: "1px", background: "#c9a961", marginBottom: "2rem" }} />
+                <button
+                  className="btn-gold animate-pulse-gold"
+                  onClick={handleCTA}
+                  style={{ width: "100%", justifyContent: "center" }}
+                >
+                  <Instagram size={18} />
+                  <span>Chamar no Direct</span>
+                </button>
+                <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.75rem", color: "#666666", marginTop: "1rem", textAlign: "center", fontWeight: 300 }}>
+                  Ao clicar, você será redirecionado para o Instagram
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ====== THREE PATHS SECTION ====== */}
+      <section
+        style={{
+          padding: "7rem 0",
+          backgroundImage: `url(${CTA_BG})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          position: "relative",
+          background: "#000000",
+        }}
+      >
+        <div style={{ position: "absolute", inset: 0, background: "rgba(0, 0, 0, 0.85)" }} />
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <div className="reveal" style={{ textAlign: "center", marginBottom: "4rem" }}>
+            <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#c9a961", marginBottom: "1rem", fontWeight: 600 }}>
+              Três caminhos possíveis
+            </p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 4vw, 2.8rem)", fontWeight: 800, lineHeight: 1.15, color: "#ffffff" }}>
+              A escolha é sua.
+            </h2>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1.5rem", marginBottom: "4rem", maxWidth: "900px", margin: "0 auto 4rem" }}>
+            {[
+              {
+                num: "A",
+                title: "Continuar postando sem sistema",
+                desc: "Curiosos → agenda instável",
+                highlight: false,
+                delay: "0ms",
+              },
+              {
+                num: "B",
+                title: "Tentar ajustar sozinho",
+                desc: "Meses testando → mesmo gargalo",
+                highlight: false,
+                delay: "150ms",
+              },
+              {
+                num: "C",
+                title: "Instalar o sistema em 30 dias",
+                desc: "Pedidos mais certos → mais previsibilidade",
+                highlight: true,
+                delay: "300ms",
+              },
+            ].map((path) => (
+              <div
+                key={path.num}
+                className="reveal"
+                style={{
+                  padding: "2.5rem 2rem",
+                  background: path.highlight ? "rgba(201, 169, 97, 0.15)" : "rgba(255, 255, 255, 0.05)",
+                  border: path.highlight ? "1px solid #c9a961" : "1px solid rgba(255, 255, 255, 0.1)",
+                  textAlign: "center",
+                  transitionDelay: path.delay,
+                  backdropFilter: "blur(8px)",
+                  color: "#ffffff",
+                }}
+              >
+                <div
+                  style={{
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontSize: "3rem",
+                    lineHeight: 1,
+                    color: path.highlight ? "#c9a961" : "#666666",
+                    marginBottom: "1rem",
+                    fontWeight: 800,
+                  }}
+                >
+                  {path.num}
+                </div>
+                <h3
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: "1.05rem",
+                    fontWeight: 700,
+                    marginBottom: "0.75rem",
+                    color: path.highlight ? "#ffffff" : "#cccccc",
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {path.title}
+                </h3>
+                <p
+                  style={{
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontSize: "0.85rem",
+                    color: path.highlight ? "#c9a961" : "#999999",
+                    fontWeight: path.highlight ? 500 : 300,
+                  }}
+                >
+                  {path.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Final CTA */}
+          <div className="reveal" style={{ textAlign: "center" }}>
+            <button
+              className="btn-gold"
+              onClick={handleCTA}
+              style={{ fontSize: "1.05rem", padding: "1.1rem 3rem" }}
+            >
+              <Instagram size={20} />
+              <span>Chamar no Direct</span>
+              <ArrowRight size={18} />
+            </button>
+            <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.8rem", color: "#999999", marginTop: "1rem", fontWeight: 300 }}>
+              Ao clicar, você será redirecionado para o Instagram
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ====== FOOTER ====== */}
+      <footer style={{ padding: "3rem 0", background: "#000000", borderTop: "1px solid #333333" }}>
+        <div className="container" style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
+          <div>
+            <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", fontWeight: 700, color: "#ffffff", marginBottom: "0.25rem" }}>
+              Piloto 30 Dias
+            </p>
+            <p style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "0.8rem", color: "#999999", fontWeight: 300 }}>
+              Instagram que vende sem parecer amador.
+            </p>
+          </div>
+          <button
+            onClick={handleCTA}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: "0.8rem",
+              color: "#c9a961",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              letterSpacing: "0.05em",
+              textTransform: "uppercase",
+              fontWeight: 600,
+            }}
+          >
+            <Instagram size={16} />
+            Chamar no Direct
+          </button>
+        </div>
+      </footer>
+    </div>
+  );
+}
